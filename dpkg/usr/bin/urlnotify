@@ -1,1 +1,18 @@
 #!/bin/bash
+
+## array
+declare -ga "_ga_exec_notify"
+#       #
+_ga_exec_notify=(
+    '/usr/bin/notify-send'
+    --app-name="UrlNotify"
+    --urgency="critical"
+    --action=1="Copy"
+    --action=0="Close"
+    "${@}"
+)
+
+
+## execute
+"${_ga_exec_notify[@]}"
+
