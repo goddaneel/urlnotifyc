@@ -1,1 +1,10 @@
 Package: urlnotify
+Version: 0.0.1
+Architecture: all
+Depends: libnotify-bin,
+    bash, 
+    wl-clipboard,
+    coreutils
+Maintainer: goddaneel <goddaneel@gmail.com>
+Description:
+
