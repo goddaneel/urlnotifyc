@@ -7,6 +7,12 @@ _gs_build_package := urlnotify_$(_gs_build_version)_all.deb
 
 
 ### array
+## clean
+_ga_exec_clean += '/usr/bin/git'
+_ga_exec_clean += clean
+_ga_exec_clean += -fxd
+
+
 ## build
 _ga_exec_version += echo
 _ga_exec_version += "$(_gs_build_version)"
@@ -59,6 +65,7 @@ _ga_exec_shasum += "$(_gs_build_package).shasum"
 ## build
 .PHONY: build-deb
 build-deb:
+	$(_ga_exec_clean)
 	$(_ga_exec_version)
 	$(_ga_exec_fdfind)
 	$(_ga_exec_dpkg)
