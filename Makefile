@@ -62,6 +62,12 @@ _ga_exec_shasum += "$(_gs_build_package).shasum"
 
 
 ### target
+## clean
+.PHONY: clean-all
+clean-all:
+	$(_ga_exec_clean)
+
+
 ## build
 .PHONY: build-deb
 build-deb:
