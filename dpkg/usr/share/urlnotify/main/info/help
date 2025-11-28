@@ -1,0 +1,22 @@
+用法：
+    urlnotify 子命令 [URL]
+
+
+子命令：
+    help
+        显示本帮助文档。
+            （"/usr/share/urlnotify/main/info/help"）
+
+    version
+        显示版本信息。
+            （"/usr/share/urlnotify/main/info/version"）
+
+    url
+        处理目标 URL。
+
+
+项目信息：
+    源码
+        <https://codeberg.org/goddaneel/urlnotify>
+        <https://github.com/goddaneel/urlnotify>
+
