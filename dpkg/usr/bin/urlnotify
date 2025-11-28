@@ -1,19 +1,47 @@
 #!/bin/bash
 
-### default
+
 ## name
-declare -ga "_ga_exec_notify"
+declare -ga "_ga_exec_notifyurl"
 declare -ga "_ga_exec_wlcopy"
-declare -ga "_ga_exec_notifyback"
+declare -ga "_ga_exec_notifyaction"
 
 declare -g "_gs_1_opt"
 declare -gi "_gi_notify_action"
 
-### argument
+
 ## variable
 _gs_1_opt="${1}"
 
 shift "1"
+
+_ga_exec_notifyurl=(
+    '/usr/bin/notify-send'
+    --app-name="URLnotify"
+    --icon="urlnotify"
+    --urgency="critical"
+    --action=1="Copy"
+    --action=0="Close"
+    --
+    "URL Notify"
+    "${@}"
+)
+
+_ga_exec_notifyaction=(
+    '/usr/bin/notify-send'
+    --app-name="URLnotify"
+    --icon="urlnotify"
+    --urgency="normal"
+    --
+)
+
+_ga_exec_wlcopy=(
+    '/usr/bin/wl-copy'
+    --trim-newline
+    --
+    "${@}"
+)
+
 
 
 ## option
@@ -28,69 +56,38 @@ case "${_gs_1_opt}" in
         ;;
     "url")
         if [[ -z "${1}" ]] ; then
-            echo -e "\n\033[31mERROR: URL is empty.\033[0m\n"
+            echo -e "\n\033[31mERROR: URL is invalid.\033[0m\n"
+            "${_ga_exec_notifyaction[@]}" "ERROR" "URL is invalid."
             exit "1"
         fi
         ;;
     *)
         echo -e "\n\033[31mERROR: Unkown option!\033[0m\n"
+        '/usr/bin/cat' "/usr/share/urlnotify/main/info/help"
         exit "1"
         ;;
 esac
 
 
-### notify
-## array
-declare -ga "_ga_exec_notify"
+## url
+_gi_notify_action="$("${_ga_exec_notifyurl[@]}")"
 
-_ga_exec_notify=(
-    '/usr/bin/notify-send'
-    --app-name="URLnotify"
-    --icon="urlnotify"
-    --urgency="critical"
-    --action=1="Copy"
-    --action=0="Close"
-    --
-    "URL Notify"
-    "${@}"
-)
-
-
-## execute
-_gi_notify_action="$("${_ga_exec_notify[@]}")"
-
-
-### wl-copy
-## array
-_ga_exec_wlcopy=(
-    '/usr/bin/wl-copy'
-    --trim-newline
-    --
-    "${@}"
-)
-
-_ga_exec_notifyback=(
-    '/usr/bin/notify-send'
-    --app-name="URLnotify"
-    --icon="urlnotify"
-    --urgency="normal"
-    --
-)
 
 ## action
 case "${_gi_notify_action}" in
     "0")
-        "${_ga_exec_notifyback[@]}" "Action 0" "Nothing happened."
+        "${_ga_exec_notifyaction[@]}" "Action 0" "Nothing happened."
         echo -e "\n\033[33mWARNING: Nothing happened.\033[0m\n"
         ;;
     "1")
         "${_ga_exec_wlcopy[@]}"
-        "${_ga_exec_notifyback[@]}" "Action 1" "Copy successful."
+        "${_ga_exec_notifyaction[@]}" "Action 1" "Copy successful."
         echo -e "\n\033[36mCopy successful.\033[0m\n"
         ;;
     *)
-        "${_ga_exec_notifyback[@]}" "Action *" "Unkown action."
+        "${_ga_exec_notifyaction[@]}" "Action ERROR" "Unkown action."
         echo -e "\n\033[31mERROR: Unkown action!\033[0m\n"
         exit "1"
         ;;
 esac
+
