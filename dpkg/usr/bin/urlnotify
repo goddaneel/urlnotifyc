@@ -34,7 +34,6 @@ case "${_gs_1_opt}" in
         ;;
     *)
         echo -e "\n\033[31mERROR: Unkown option!\033[0m\n"
-        '/usr/bin/cat' "/usr/share/urlnotify/main/info/version"
         exit "1"
         ;;
 esac
@@ -52,7 +51,7 @@ _ga_exec_notify=(
     --action=1="Copy"
     --action=0="Close"
     --
-    "A program wants to open a URL."
+    "URL Notify"
     "${@}"
 )
 
@@ -82,12 +81,12 @@ _ga_exec_notifyback=(
 case "${_gi_notify_action}" in
     "0")
         "${_ga_exec_notifyback[@]}" "Action 0" "Nothing happened."
-        echo -e "\n\033[31mERROR: Nothing happened.\033[0m\n"
+        echo -e "\n\033[33mWARNING: Nothing happened.\033[0m\n"
         ;;
     "1")
         "${_ga_exec_wlcopy[@]}"
         "${_ga_exec_notifyback[@]}" "Action 1" "Copy successful."
-        echo -e "\n\033[31mSUCCESS: Copy successful.\033[0m\n"
+        echo -e "\n\033[36mCopy successful.\033[0m\n"
         ;;
     *)
         "${_ga_exec_notifyback[@]}" "Action *" "Unkown action."
