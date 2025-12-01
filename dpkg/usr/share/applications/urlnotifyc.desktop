@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=URLnotify
-Icon=urlnotify
-Exec=urlnotify url %u
+Name=URLnotifyC
+Icon=urlnotifyc
+Exec=urlnotifyc url %u
 StartupNotify=true
-StartupWMClass=urlnotify
+StartupWMClass=urlnotifyc
 MimeType=x-scheme-handler/http;x-scheme-handler/https;
 Categories=Utility;
 

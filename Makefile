@@ -2,7 +2,7 @@
 ## pack
 _gs_control_version := $(shell '/usr/bin/grep' "Version:" "./dpkg/DEBIAN/control")
 _gs_build_version := $(subst Version: ,,$(_gs_control_version))
-_gs_build_package := urlnotify_$(_gs_build_version)_all.deb
+_gs_build_package := urlnotifyc_$(_gs_build_version)_all.deb
 
 
 
@@ -17,12 +17,12 @@ _ga_exec_clean += -fxd
 _ga_exec_version += echo
 _ga_exec_version += "$(_gs_build_version)"
 _ga_exec_version += >
-_ga_exec_version += "./dpkg/usr/share/urlnotify/main/info/version"
+_ga_exec_version += "./dpkg/usr/share/urlnotifyc/main/info/version"
 _ga_exec_version += ;
 _ga_exec_version += '/usr/bin/chmod'
 _ga_exec_version += -v
 _ga_exec_version += 0644
-_ga_exec_version += "./dpkg/usr/share/urlnotify/main/info/version"
+_ga_exec_version += "./dpkg/usr/share/urlnotifyc/main/info/version"
 
 _ga_exec_fdfind += cd "./dpkg"
 _ga_exec_fdfind += ;
