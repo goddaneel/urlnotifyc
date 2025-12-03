@@ -97,13 +97,13 @@ void _gf_opts_help()
 }
 
 
-void _gf_opts_url(char *openurl)
+void _gf_opts_url(char *_lc_args_url)
 {
     notify_init("UrlNotifyC") ;
     NotifyNotification * _lp_notify ;
     _lp_notify = notify_notification_new(
             "Hello World",
-            openurl,
+            _lc_args_url,
             "urlnotify"
             ) ;
     notify_notification_set_app_icon(
