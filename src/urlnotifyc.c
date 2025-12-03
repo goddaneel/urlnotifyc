@@ -21,9 +21,13 @@ int main(
         )
         printf(
                 "%s\n",
-                optv[i]);
+                optv[i]
+            );
 
-    if (strncmp(optv[1], "version", 100) == 0)
+    if (
+        strncmp(optv[1], "--version", 100) == 0 || 
+        strncmp(optv[1], "-v", 100) == 0
+    )
         _gf_opts_version() ;
     else
         printf("other\n") ;
