@@ -14,6 +14,18 @@ _ga_exec_clean += -fxd
 
 
 ## build
+_ga_exec_lib += '/usr/bin/pkg-config'
+_ga_exec_lib += --cflags
+_ga_exec_lib += --libs
+
+_ga_exec_bin += '/usr/bin/gcc'
+_ga_exec_bin += "./src/urlnotifyc.c"
+_ga_exec_bin += -o
+_ga_exec_bin += "./dpkg/usr/bin/urlnotifyc"
+_ga_exec_bin += $(shell '/usr/bin/pkg-config' --cflags --libs "glib-2.0")
+_ga_exec_bin += $(shell '/usr/bin/pkg-config' --cflags --libs "gdk-pixbuf-2.0")
+_ga_exec_bin += $(shell '/usr/bin/pkg-config' --cflags --libs "libnotify")
+
 _ga_exec_version += echo
 _ga_exec_version += "$(_gs_build_version)"
 _ga_exec_version += >
@@ -69,8 +81,13 @@ clean-all:
 
 
 ## build
+.PHONY: build-bin
+build-bin:
+	$(_ga_exec_bin)
+
 .PHONY: build-deb
 build-deb:
+	$(_ga_exec_bin)
 	$(_ga_exec_clean)
 	$(_ga_exec_version)
 	$(_ga_exec_fdfind)
