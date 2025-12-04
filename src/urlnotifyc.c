@@ -14,10 +14,11 @@ void _gf_opts_notify();
 
 
 // main
-int main(
-        int _gi_args_main,
-        char *_gC_args_main[]
-        )
+    int
+main(
+        int     _gi_args_main,
+        char    *_gC_args_main[]
+    )
 {
     if (_gi_args_main < 2)
     {
@@ -85,9 +86,10 @@ int main(
 
 
 // opts
-void _gf_opts_version()
+    void
+_gf_opts_version()
 {
-    char _lC_file_version[100];
+    char _lC_file_version[1024];
     FILE *_lp_file_version;
 
     _lp_file_version = fopen(
@@ -110,9 +112,10 @@ void _gf_opts_version()
 }
 
 
-void _gf_opts_help()
+    void
+_gf_opts_help()
 {
-    char _lC_file_help[100];
+    char _lC_file_help[1024];
     FILE *_lp_file_help;
 
     _lp_file_help = fopen(
@@ -135,80 +138,122 @@ void _gf_opts_help()
 }
 
 
-void _gf_opts_notify(
-        char *_lc_args_notify
+
+// opts notify
+char _zc_notify_action[1024];
+
+static GMainLoop *_gp_loop_opts_notify;
+
+
+    static void
+_gf_opts_notify_callback(
+        NotifyNotification  *_lp_notify_url,
+        char                *_lc_notify_action,
+        void                *_lv_notify_userdata
         )
 {
-    char *_lC_exec_notifyurl[] = {
-        "/usr/bin/notify-send",
-        "--app-name=URLnotifyC",
-        "--icon=urlnotifyc",
-        "--urgency=critical",
-        "--action=0=Close",
-        "--action=1=Copy",
-        "--",
-        "URL Notify",
-        _lc_args_notify,
-        NULL
-    };
+    strncpy(
+            _zc_notify_action,
+            _lc_notify_action,
+            sizeof(_zc_notify_action) - 1
+           );
 
-    char *_lC_exec_notifyaction0[] = {
-        "/usr/bin/notify-send",
-        "--app-name=URLnotifyC",
-        "--icon=urlnotifyc",
-        "--urgency=normal",
-        "--",
-        "Action 0",
-        "Nothing happen.",
-        NULL
-    };
-
-    char *_lC_exec_notifyaction1[] = {
-        "/usr/bin/notify-send",
-        "--app-name=URLnotifyC",
-        "--icon=urlnotifyc",
-        "--urgency=normal",
-        "--",
-        "Action 1",
-        "Copy successful.",
-        NULL
-    };
-
-    char *_lC_exec_notifyactiond[] = {
-        "/usr/bin/notify-send",
-        "--app-name=URLnotifyC",
-        "--icon=urlnotifyc",
-        "--urgency=normal",
-        "--",
-        "ERROR",
-        "Unkown action",
-        NULL
-    };
-
-    int _li_notify_action = execvp(
-            _lC_exec_notifyurl[0],
-            _lC_exec_notifyurl
+    notify_notification_close(
+            _lp_notify_url,
+            NULL
             );
 
-    switch (_li_notify_action)
+    g_main_loop_quit(_gp_loop_opts_notify);
+}
+
+
+    void
+_gf_opts_notify(
+        char    *_lc_args_notify
+        )
+{
+    _gp_loop_opts_notify = g_main_loop_new(
+            NULL,
+            FALSE
+            );
+
+    notify_init(
+            "URLnotifyC"
+            );
+
+    NotifyNotification *_lp_notify_url;
+
+    _lp_notify_url = notify_notification_new(
+            "URL Notify",
+            _lc_args_notify,
+            NULL
+            );
+
+    notify_notification_set_app_icon(
+            _lp_notify_url,
+            "urlnotifyc"
+            );
+
+    notify_notification_set_urgency(
+            _lp_notify_url,
+            NOTIFY_URGENCY_CRITICAL
+            );
+
+    notify_notification_add_action(
+            _lp_notify_url,
+            "close",
+            "Close",
+            _gf_opts_notify_callback,
+            NULL,
+            NULL
+            );
+
+    notify_notification_add_action(
+            _lp_notify_url,
+            "copy",
+            "Copy",
+            _gf_opts_notify_callback,
+            NULL,
+            NULL
+            );
+
+    notify_notification_show(
+            _lp_notify_url,
+            NULL
+            );
+
+    g_main_loop_run(_gp_loop_opts_notify);
+
+    g_object_unref(
+            G_OBJECT(
+                _lp_notify_url
+                )
+            );
+
+    notify_uninit();
+
+    if (
+            strncmp(
+                _zc_notify_action,
+                "close",
+                sizeof(_zc_notify_action)
+            ) == 0
+       )
     {
-        case '0':
-            printf("\n\033[33mAction 0: Nothing happen.\033[0m\n\n");
-            execvp(
-                    _lC_exec_notifyaction0[0],
-                    _lC_exec_notifyaction0
-                  );
-        case '1':
-            printf("\n\033[36mAction 1: Copy successful.\033[0m\n\n");
-            execvp(
-                    _lC_exec_notifyaction1[1],
-                    _lC_exec_notifyaction1
-                  );
-        default:
-            printf("\n\033[31mERROR: Unkown action.\033[0m\n\n");
-            execvp(
-                    _lC_exec_notifyactiond[1],
-                    _lC_exec_notifyactiond
-                  );
+        printf("\n\033[33mAction 0: Nothing happen.\033[0m\n\n");
+    }
+    else if (
+            strncmp(
+                _zc_notify_action,
+                "copy",
+                sizeof(_zc_notify_action)
+            ) == 0
+            )
+    {
+        printf("\n\033[36mAction 1: Copy successful.\033[0m\n\n");
+    }
+    else
+    {
+        printf("\n\033[31mERROR: Unkown action.\033[0m\n\n");
     }
 }
