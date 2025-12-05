@@ -6,85 +6,6 @@
 
 
 
-// function
-void _gf_opts_version();
-void _gf_opts_help();
-void _gf_opts_notify();
-
-
-
-// main
-    int
-main(
-        int     _gi_args_main,
-        char    *_gC_args_main[]
-    )
-{
-    if (_gi_args_main < 2)
-    {
-        printf("\n\033[31mERROR: Empty option.\033[0m\n\n");
-    }
-    else if (
-            strncmp(
-                _gC_args_main[1],
-                "-v",
-                sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
-                _gC_args_main[1],
-                "--version",
-                sizeof(_gC_args_main[1])
-                ) == 0
-            )
-    {
-        _gf_opts_version();
-    }
-    else if (
-            strncmp(
-                _gC_args_main[1],
-                "-h",
-                sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
-                _gC_args_main[1],
-                "--help",
-                sizeof(_gC_args_main[1])
-                ) == 0
-            )
-    {
-        _gf_opts_help();
-    }
-    else if (_gi_args_main < 3)
-    {
-        printf("\n\033[31mERROR: Missing argument.\033[0m\n\n");
-    }
-    else if (
-            strncmp(
-                _gC_args_main[1],
-                "-n",
-                sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
-                _gC_args_main[1],
-                "--notify",
-                sizeof(_gC_args_main[1])
-                ) == 0
-            )
-    {
-        _gf_opts_notify(
-                _gC_args_main[2]
-                );
-    }
-    else
-    {
-        printf("\n\033[31mERROR: Invalid option.\033[0m\n\n");
-    }
-
-    return 0;
-}
-
-
-
 // opts
     void
 _gf_opts_version()
@@ -237,7 +158,7 @@ _gf_opts_notify(
                 _zc_notify_action,
                 "close",
                 sizeof(_zc_notify_action)
-            ) == 0
+                ) == 0
        )
     {
         printf("\n\033[33mAction 0: Nothing happen.\033[0m\n\n");
@@ -247,7 +168,7 @@ _gf_opts_notify(
                 _zc_notify_action,
                 "copy",
                 sizeof(_zc_notify_action)
-            ) == 0
+                ) == 0
             )
     {
         printf("\n\033[36mAction 1: Copy successful.\033[0m\n\n");
@@ -256,4 +177,76 @@ _gf_opts_notify(
     {
         printf("\n\033[31mERROR: Unkown action.\033[0m\n\n");
     }
+}
+
+
+
+// main
+    void
+main(
+        int     _gi_args_main,
+        char    *_gC_args_main[]
+    )
+{
+    if (_gi_args_main < 2)
+    {
+        printf("\n\033[31mERROR: Empty option.\033[0m\n\n");
+    }
+    else if (
+            strncmp(
+                _gC_args_main[1],
+                "-v",
+                sizeof(_gC_args_main[1])
+                ) == 0 ||
+            strncmp(
+                _gC_args_main[1],
+                "--version",
+                sizeof(_gC_args_main[1])
+                ) == 0
+            )
+    {
+        _gf_opts_version();
+    }
+    else if (
+            strncmp(
+                _gC_args_main[1],
+                "-h",
+                sizeof(_gC_args_main[1])
+                ) == 0 ||
+            strncmp(
+                _gC_args_main[1],
+                "--help",
+                sizeof(_gC_args_main[1])
+                ) == 0
+            )
+    {
+        _gf_opts_help();
+    }
+    else if (_gi_args_main < 3)
+    {
+        printf("\n\033[31mERROR: Missing argument.\033[0m\n\n");
+    }
+    else if (
+            strncmp(
+                _gC_args_main[1],
+                "-n",
+                sizeof(_gC_args_main[1])
+                ) == 0 ||
+            strncmp(
+                _gC_args_main[1],
+                "--notify",
+                sizeof(_gC_args_main[1])
+                ) == 0
+            )
+    {
+        _gf_opts_notify(
+                _gC_args_main[2]
+                );
+    }
+    else
+    {
+        printf("\n\033[31mERROR: Invalid option.\033[0m\n\n");
+    }
+
+    return 0;
 }
