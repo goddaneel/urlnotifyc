@@ -6,56 +6,53 @@
 
 
 
-// opts
+// opts info
     void
-_gf_opts_version()
+_gf_opts_info(
+        char    *_lc_args_info
+        )
 {
-    char _lC_file_version[1024];
-    FILE *_lp_file_version;
+    char _lC_file_info[1024];
+    FILE *_lp_file_info;
 
-    _lp_file_version = fopen(
-            "/usr/share/urlnotifyc/main/info/version",
+    char _lc_path_info[] = "/usr/share/urlnotifyc/main/info/";
+
+    strncat(
+            _lc_path_info,
+            _lc_args_info,
+            sizeof(_lc_path_info) - strlen(_lc_path_info) - 1
+           );
+
+    _lp_file_info = fopen(
+            _lc_path_info,
             "r"
             );
 
-    while (
-            fgets(
-                _lC_file_version,
-                sizeof(_lC_file_version),
-                _lp_file_version
-                )
-          )
+    if (
+            _lp_file_info == NULL
+       )
     {
-        printf("%s", _lC_file_version);
+        printf("\n\033[31mERROR: File opening failed.\033[0m\n\n");
+        exit(1);
     }
-
-    fclose(_lp_file_version);
-}
-
-
-    void
-_gf_opts_help()
-{
-    char _lC_file_help[1024];
-    FILE *_lp_file_help;
-
-    _lp_file_help = fopen(
-            "/usr/share/urlnotifyc/main/info/help",
-            "r"
-            );
 
     while (
             fgets(
-                _lC_file_help,
-                sizeof(_lC_file_help),
-                _lp_file_help
+                _lC_file_info,
+                sizeof(_lC_file_info),
+                _lp_file_info
                 )
           )
     {
-        printf("%s", _lC_file_help);
+        printf("%s", _lC_file_info);
     }
 
-    fclose(_lp_file_help);
+    if (
+            fclose(_lp_file_info) != 0
+       )
+    {
+        printf("\n\033[31mERROR: File closing failed.\033[0m\n\n");
+    }
 }
 
 
@@ -64,7 +61,6 @@ _gf_opts_help()
 char _zc_notify_action[1024];
 
 static GMainLoop *_gp_loop_opts_notify;
-
 
     static void
 _gf_opts_notify_callback(
@@ -120,10 +116,17 @@ _gf_opts_notify(
             NOTIFY_URGENCY_CRITICAL
             );
 
+    g_signal_connect(
+            G_OBJECT(_lp_notify_url),
+            "closed",
+            G_CALLBACK(_gf_opts_notify_callback),
+            "close"
+            );
+
     notify_notification_add_action(
             _lp_notify_url,
-            "close",
-            "Close",
+            "copy",
+            "Copy",
             _gf_opts_notify_callback,
             NULL,
             NULL
@@ -131,8 +134,8 @@ _gf_opts_notify(
 
     notify_notification_add_action(
             _lp_notify_url,
-            "copy",
-            "Copy",
+            "close",
+            "Close",
             _gf_opts_notify_callback,
             NULL,
             NULL
@@ -151,7 +154,9 @@ _gf_opts_notify(
                 )
             );
 
-    notify_uninit();
+    int _li_notify_status = 0;
+
+    NotifyNotification *_lp_notify_action;
 
     if (
             strncmp(
@@ -161,7 +166,15 @@ _gf_opts_notify(
                 ) == 0
        )
     {
+        _li_notify_status = 1;
+        //      //
         printf("\n\033[33mAction 0: Nothing happen.\033[0m\n\n");
+        //      //
+        _lp_notify_action = notify_notification_new(
+                "Action 0",
+                "Nothing happen.",
+                NULL
+                );
     }
     else if (
             strncmp(
@@ -171,18 +184,73 @@ _gf_opts_notify(
                 ) == 0
             )
     {
+        char *_lC_exec_wlcopy[] = {
+            "/usr/bin/wl-copy",
+            "--trim-newline",
+            "--",
+            _lc_args_notify,
+            NULL
+        };
+        //      //
+        execvp(
+            _lC_exec_wlcopy[0],
+            _lC_exec_wlcopy
+        );
+        //      //
         printf("\n\033[36mAction 1: Copy successful.\033[0m\n\n");
+        //      //
+        _lp_notify_action = notify_notification_new(
+                "Action 1",
+                "Copy successful.",
+                NULL
+                );
     }
     else
     {
+        _li_notify_status = 1;
+        //      //
         printf("\n\033[31mERROR: Unkown action.\033[0m\n\n");
+        //      //
+        _lp_notify_action = notify_notification_new(
+                "ERROR",
+                "Unkown action.",
+                NULL
+                );
+    }
+
+    notify_notification_set_app_icon(
+            _lp_notify_action,
+            "urlnotifyc"
+            );
+
+    notify_notification_set_urgency(
+            _lp_notify_action,
+            NOTIFY_URGENCY_NORMAL
+            );
+
+    notify_notification_show(
+            _lp_notify_action,
+            NULL
+            );
+
+    g_object_unref(
+            G_OBJECT(
+                _lp_notify_action
+                )
+            );
+
+    notify_uninit();
+
+    if (_li_notify_status != 0)
+    {
+        exit(_li_notify_status);
     }
 }
 
 
 
 // main
-    void
+    int
 main(
         int     _gi_args_main,
         char    *_gC_args_main[]
@@ -191,6 +259,8 @@ main(
     if (_gi_args_main < 2)
     {
         printf("\n\033[31mERROR: Empty option.\033[0m\n\n");
+        //      //
+        return 1;
     }
     else if (
             strncmp(
@@ -205,7 +275,7 @@ main(
                 ) == 0
             )
     {
-        _gf_opts_version();
+        _gf_opts_info("version");
     }
     else if (
             strncmp(
@@ -220,11 +290,13 @@ main(
                 ) == 0
             )
     {
-        _gf_opts_help();
+        _gf_opts_info("help");
     }
     else if (_gi_args_main < 3)
     {
         printf("\n\033[31mERROR: Missing argument.\033[0m\n\n");
+        //      //
+        return 1;
     }
     else if (
             strncmp(
@@ -246,6 +318,8 @@ main(
     else
     {
         printf("\n\033[31mERROR: Invalid option.\033[0m\n\n");
+        //      //
+        return 1;
     }
 
     return 0;
