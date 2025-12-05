@@ -2,7 +2,7 @@
 Type=Application
 Name=URLnotifyC
 Icon=urlnotifyc
-Exec=urlnotifyc --url %u
+Exec=urlnotifyc --notify %u
 StartupNotify=true
 StartupWMClass=urlnotifyc
 MimeType=x-scheme-handler/http;x-scheme-handler/https;
