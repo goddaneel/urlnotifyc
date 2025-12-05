@@ -1,22 +1,22 @@
 用法：
-    urlnotify 子命令 [URL]
+    urlnotifyc 选项 [URL]
 
 
-子命令：
-    help
+选项：
+    -h, --help
         显示本帮助文档。
-            （"/usr/share/urlnotify/main/info/help"）
+            （"/usr/share/urlnotifyc/main/info/help"）
 
-    version
+    -v, --version
         显示版本信息。
-            （"/usr/share/urlnotify/main/info/version"）
+            （"/usr/share/urlnotifyc/main/info/version"）
 
-    url
+    -n, --notify
         处理（复制）目标 URL。
 
 
 项目信息：
     源码
-        <https://codeberg.org/goddaneel/urlnotify>
-        <https://github.com/goddaneel/urlnotify>
+        <https://codeberg.org/goddaneel/urlnotifyc>
+        <https://github.com/goddaneel/urlnotifyc>
 

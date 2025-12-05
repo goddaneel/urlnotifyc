@@ -193,9 +193,9 @@ _gf_opts_notify(
         };
         //      //
         execvp(
-            _lC_exec_wlcopy[0],
-            _lC_exec_wlcopy
-        );
+                _lC_exec_wlcopy[0],
+                _lC_exec_wlcopy
+              );
         //      //
         printf("\n\033[36mAction 1: Copy successful.\033[0m\n\n");
         //      //

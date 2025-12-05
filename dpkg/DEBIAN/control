@@ -1,10 +1,7 @@
 Package: urlnotifyc
 Version: 0.0.1
 Architecture: all
-Depends: libnotify-bin,
-    bash, 
-    wl-clipboard,
-    coreutils
+Depends: wl-clipboard
 Maintainer: goddaneel <goddaneel@gmail.com>
 Description: Block unauthorized URL requests and display a notification prompting for action.
 
