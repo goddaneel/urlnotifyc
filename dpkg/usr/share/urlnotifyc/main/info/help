@@ -11,11 +11,11 @@
         显示版本信息。
             （"/usr/share/urlnotifyc/main/info/version"）
 
-    -n, --notify
+    -n, --notify URL
         处理（复制）目标 URL。
 
 
-项目信息：
+项目：
     源码
         <https://codeberg.org/goddaneel/urlnotifyc>
         <https://github.com/goddaneel/urlnotifyc>
