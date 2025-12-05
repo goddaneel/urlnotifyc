@@ -10,17 +10,18 @@
 // opts info
     void
 _gf_opts_info(
-        char    *_lc_args_info
+        char    *_lc_arg1_info
         )
 {
     char _lC_file_info[1024];
+
     FILE *_lp_file_info;
 
     char _lc_path_info[128] = "/usr/share/urlnotifyc/main/info/";
 
     strncat(
             _lc_path_info,
-            _lc_args_info,
+            _lc_arg1_info,
             sizeof(_lc_path_info) - strlen(_lc_path_info) - 1
            );
 
@@ -34,11 +35,11 @@ _gf_opts_info(
        )
     {
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: File opening failed."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: File opening failed."
+                "\033[0m\n\n"
+               );
         //      //
         exit(EXIT_FAILURE);
     }
@@ -52,9 +53,9 @@ _gf_opts_info(
           )
     {
         printf(
-            "%s",
-             _lC_file_info
-            );
+                "%s",
+                _lC_file_info
+              );
     }
 
     if (
@@ -62,11 +63,11 @@ _gf_opts_info(
        )
     {
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: File closing failed."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: File closing failed."
+                "\033[0m\n\n"
+               );
     }
 }
 
@@ -102,7 +103,7 @@ _gf_opts_notify_callback(
 
     void
 _gf_opts_notify_url(
-        char    *_lc_args_notify_url
+        char    *_lc_arg1_notify_url
         )
 {
     _gp_loop_opts_notify = g_main_loop_new(
@@ -113,8 +114,8 @@ _gf_opts_notify_url(
     NotifyNotification *_lp_notify_url;
 
     _lp_notify_url = notify_notification_new(
-            "URL Notify",
-            _lc_args_notify_url,
+            "URL",
+            _lc_arg1_notify_url,
             NULL
             );
 
@@ -161,16 +162,14 @@ _gf_opts_notify_url(
     g_main_loop_run(_gp_loop_opts_notify);
 
     g_object_unref(
-            G_OBJECT(
-                _lp_notify_url
-                )
+            G_OBJECT(_lp_notify_url)
             );
 }
 
 
-    int
+    void
 _gf_opts_notify_copy(
-        char    *_lc_args_notify_copy
+        char    *_lc_arg1_notify_copy
         )
 {
     pid_t _li_pid_copy;
@@ -183,7 +182,7 @@ _gf_opts_notify_copy(
             "/usr/bin/wl-copy",
             "--trim-newline",
             "--",
-            _lc_args_notify_copy,
+            _lc_arg1_notify_copy,
             NULL
         };
         //      //
@@ -195,8 +194,8 @@ _gf_opts_notify_copy(
         exit(EXIT_FAILURE);
     }
     else if (
-            _li_pid_copy < 0 ||
-            waitpid(
+            _li_pid_copy < 0
+            || waitpid(
                 _li_pid_copy,
                 NULL,
                 0
@@ -204,11 +203,11 @@ _gf_opts_notify_copy(
             )
     {
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: Copy failed."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: Copy execution failed."
+                "\033[0m\n\n"
+               );
         //      //
         exit(EXIT_FAILURE);
     }
@@ -253,14 +252,14 @@ _gf_opts_notify(
         _li_notify_status = EXIT_FAILURE;
         //      //
         fprintf(
-            stderr,
-            "\n\033[33m"
-            "WARNING: URL is null."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "WARNING: URL is null."
+                "\033[0m\n\n"
+               );
         //      //
         _lp_notify_action = notify_notification_new(
-                "WARNING",
+                "ERROR",
                 "URL is null.",
                 NULL
                 );
@@ -271,20 +270,22 @@ _gf_opts_notify(
                 "close",
                 sizeof(_zc_notify_action)
                 ) == 0
-       )
+            )
     {
         _li_notify_status = EXIT_FAILURE;
         //      //
         fprintf(
-            stderr,
-            "\n\033[33m"
-            "Action 0: Nothing happen."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[33m"
+                "Close: "
+                "%s"
+                "\033[0m\n\n",
+                _lC_args_notify[2]
+               );
         //      //
         _lp_notify_action = notify_notification_new(
-                "Action 0",
-                "Nothing happen.",
+                "Close",
+                _lC_args_notify[2],
                 NULL
                 );
     }
@@ -299,14 +300,16 @@ _gf_opts_notify(
         _gf_opts_notify_copy(_lC_args_notify[2]);
         //      //
         printf(
-            "\n\033[36m"
-            "Action 1: Copy successful."
-            "\033[0m\n\n"
-        );
+                "\n\033[36m"
+                "Copy: "
+                "%s"
+                "\033[0m\n\n",
+                _lC_args_notify[2]
+              );
         //      //
         _lp_notify_action = notify_notification_new(
-                "Action 1",
-                "Copy successful.",
+                "Copy",
+                _lC_args_notify[2],
                 NULL
                 );
     }
@@ -315,11 +318,11 @@ _gf_opts_notify(
         _li_notify_status = EXIT_FAILURE;
         //      //
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: Unkown action."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: Unkown action."
+                "\033[0m\n\n"
+               );
         //      //
         _lp_notify_action = notify_notification_new(
                 "ERROR",
@@ -344,9 +347,7 @@ _gf_opts_notify(
             );
 
     g_object_unref(
-            G_OBJECT(
-                _lp_notify_action
-                )
+            G_OBJECT(_lp_notify_action)
             );
 
     notify_uninit();
@@ -369,11 +370,11 @@ main(
     if (_gi_args_main < 2)
     {
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: Empty option."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: Empty option."
+                "\033[0m\n\n"
+               );
         //      //
         return EXIT_FAILURE;
     }
@@ -382,8 +383,8 @@ main(
                 _gC_args_main[1],
                 "-v",
                 sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
+                ) == 0
+            || strncmp(
                 _gC_args_main[1],
                 "--version",
                 sizeof(_gC_args_main[1])
@@ -397,8 +398,8 @@ main(
                 _gC_args_main[1],
                 "-h",
                 sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
+                ) == 0
+            || strncmp(
                 _gC_args_main[1],
                 "--help",
                 sizeof(_gC_args_main[1])
@@ -412,8 +413,8 @@ main(
                 _gC_args_main[1],
                 "-n",
                 sizeof(_gC_args_main[1])
-                ) == 0 ||
-            strncmp(
+                ) == 0
+            || strncmp(
                 _gC_args_main[1],
                 "--notify",
                 sizeof(_gC_args_main[1])
@@ -428,16 +429,16 @@ main(
     else
     {
         fprintf(
-            stderr,
-            "\n\033[31m"
-            "ERROR: Invalid option."
-            "\033[0m\n\n"
-        );
+                stderr,
+                "\n\033[31m"
+                "ERROR: Invalid option."
+                "\033[0m\n\n"
+               );
+        //      //
+        _gf_opts_info("help");
         //      //
         return EXIT_FAILURE;
     }
-
-    g_main_loop_quit(_gp_loop_opts_notify);
 
     return EXIT_SUCCESS;
 }
