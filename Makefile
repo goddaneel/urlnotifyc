@@ -94,8 +94,8 @@ build-bin:
 
 .PHONY: build-deb
 build-deb:
-	$(_ga_exec_bin)
 	$(_ga_exec_clean)
+	$(_ga_exec_bin)
 	$(_ga_exec_version)
 	$(_ga_exec_fdfind)
 	$(_ga_exec_dpkg)
