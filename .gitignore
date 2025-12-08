@@ -1,4 +1,2 @@
+build/
 export/
-dpkg/DEBIAN/shasums
-dpkg/usr/bin/urlnotifyc
-dpkg/usr/share/urlnotifyc/main/info/version
