@@ -32,6 +32,7 @@ function _gF_unit_mkdir ()
                 -d
                 -m 0755
                 "./build/create/DEBIAN"
+                "./build/create/bin"
                 "./build/create/info"
                 "./build/dpkg/DEBIAN"
                 "./build/dpkg/usr/bin"
@@ -49,6 +50,7 @@ function _gF_unit_bin ()
 {
         declare -a "_la_exec_gcc" ;
         declare -a "_la_exec_lib" ;
+        declare -a "_la_args_lib" ;
         #               #
         _la_exec_lib=(
                 '/usr/bin/pkg-config'
@@ -57,15 +59,17 @@ function _gF_unit_bin ()
                 "libnotify"
         )
         #               #
+        IFS=" " read -r -a _la_args_lib <<< "$("${_la_exec_lib[@]}")" ;
+        #               #
         _la_exec_gcc=(
                 '/usr/bin/gcc'
                 "./src/urlnotifyc.c"
                 -o
                 "./build/create/bin/urlnotifyc"
-                $("${_la_exec_lib[@]}")
+                "${_la_args_lib[@]}"
         )
         #               #
-        "${_la_exec_bin[@]}" ;
+        "${_la_exec_gcc[@]}" ;
 }
 declare -fr '_gF_unit_bin'
 
@@ -246,6 +250,10 @@ _gs_build_package="urlnotifyc_${_gs_build_version}_all.deb"
 
 
 ### exec
+## set
+set -v
+set -x
+
 ## case
 case "${_gs_1_opt}" in
         "clean-all")
