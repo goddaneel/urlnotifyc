@@ -94,7 +94,7 @@ function _gF_unit_precopy ()
                 -t
                 "./build/dpkg/usr/bin/"
                 --
-                "./dpkg/usr/bin/urlnotifyc"
+                "./build/create/bin/urlnotifyc"
         )
         #               #
         "${_la_exec_install[@]}" ;
