@@ -73,6 +73,13 @@ function _gF_unit_bin ()
 }
 declare -fr '_gF_unit_bin'
 
+function _gF_unit_exec () {
+        shift "1" ;
+        #       #
+        "./build/create/bin/urlnotifyc" "${@}" ;
+}
+declare -fr '_gF_unit_exec'
+
 function _gF_unit_precopy () 
 {
         declare -a "_la_exec_install" ;
@@ -263,6 +270,12 @@ case "${_gs_1_opt}" in
                 '_gF_unit_clean'
                 '_gF_unit_mkdir'
                 '_gF_unit_bin'
+                ;;
+        "build-exec")
+                '_gF_unit_clean'
+                '_gF_unit_mkdir'
+                '_gF_unit_bin'
+                '_gF_unit_exec' "${@}"
                 ;;
         "build-deb")
                 '_gF_unit_clean'
